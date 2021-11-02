@@ -4,6 +4,7 @@ package com.zhou.blog.handler;
 import com.alibaba.fastjson.JSON;
 import com.zhou.blog.dao.pojo.SysUser;
 import com.zhou.blog.service.LoginService;
+import com.zhou.blog.utils.UserThreadLocal;
 import com.zhou.blog.vo.ErrorCode;
 import com.zhou.blog.vo.Result;
 import lombok.extern.slf4j.Slf4j;
@@ -59,10 +60,22 @@ public class LoginInterceptor implements HandlerInterceptor {
             return  false;
         }
 
+        log.info("=================request start===========================");
+        String requestURI = request.getRequestURI();
+        log.info("request uri:{}",requestURI);
+        log.info("request method:{}",request.getMethod());
+        log.info("token:{}", token);
+        log.info("=================request end===========================");
 
-
+        UserThreadLocal.put(sysUser);
+        //我希望在controller中 直接获取用户的信息 怎么获取?
         // 验证完成 放行
         return true;
     }
 
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        //如果不删除 ThreadLocal中用完的信息 会有内存泄漏的风险
+        UserThreadLocal.remove();
+    }
 }
