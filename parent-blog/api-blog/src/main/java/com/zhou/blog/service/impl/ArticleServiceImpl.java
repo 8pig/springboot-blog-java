@@ -5,11 +5,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.mysql.cj.log.Log;
 import com.zhou.blog.dao.dos.Archives;
+import com.zhou.blog.dao.mapper.ArticleBodyMapper;
 import com.zhou.blog.dao.mapper.ArticleMapper;
 import com.zhou.blog.dao.pojo.Article;
+import com.zhou.blog.dao.pojo.ArticleBody;
 import com.zhou.blog.service.ArticleService;
+import com.zhou.blog.service.CategoryService;
 import com.zhou.blog.service.SysUserService;
 import com.zhou.blog.service.TagService;
+import com.zhou.blog.vo.ArticleBodyVo;
 import com.zhou.blog.vo.ArticleVo;
 import com.zhou.blog.vo.Result;
 import com.zhou.blog.vo.params.PageParams;
@@ -95,17 +99,31 @@ public class ArticleServiceImpl implements ArticleService {
         return Result.success(archivesList);
     }
 
+
     private List<ArticleVo> copyList(List<Article> records, boolean isTag, boolean isAuthor ) {
         List<ArticleVo> articleVoList = new ArrayList<>();
         for (Article record: records) {
-            articleVoList.add(copy(record, isTag, isAuthor));
+            articleVoList.add(copy(record, isTag, isAuthor, false, false));
         }
         return articleVoList;
     }
 
-    private ArticleVo copy(Article article, boolean isTag, boolean isAuthor){
+    /*
+    *  重载
+    * */
+    private List<ArticleVo> copyList(List<Article> records, boolean isTag, boolean isAuthor,boolean isBody, boolean isCategory ) {
+        List<ArticleVo> articleVoList = new ArrayList<>();
+        for (Article record: records) {
+            articleVoList.add(copy(record, isTag, isAuthor, isBody, isCategory));
+        }
+        return articleVoList;
+    }
+
+    @Autowired
+    private CategoryService categoryService;
+    private ArticleVo copy(Article article, boolean isTag, boolean isAuthor,boolean isBody, boolean isCategory){
         ArticleVo articleVo = new ArticleVo();
-//        articleVo.setId(Long.valueOf(String.valueOf(article.getId())));
+        articleVo.setId(Long.valueOf(String.valueOf(article.getId())));
         BeanUtils.copyProperties(article,articleVo);
 
         System.out.println(article.toString());
@@ -121,11 +139,48 @@ public class ArticleServiceImpl implements ArticleService {
             Long authorId = article.getAuthorId();
             articleVo.setAuthor(sysUserService.findUserById(authorId).getNickname());
         }
+        if(isBody){
+            Long bodyId = article.getBodyId();
+            articleVo.setBody(findArticleBodyById(bodyId));
+        }
+
+        if (isCategory) {
+            try {
+                Long categoryId = article.getCategoryId();
+                articleVo.setCategory(categoryService.findCategoryById(categoryId));
+            }catch (Exception e) {
+                System.out.println(e);
+            }
+        }
 
         return articleVo;
     }
 
+    @Resource
+    private ArticleBodyMapper articleBodyMapper;
+    private ArticleBodyVo findArticleBodyById(Long bodyId) {
+        ArticleBody articleBody = articleBodyMapper.selectById(bodyId);
+        ArticleBodyVo articleBodyVo = new ArticleBodyVo();
+        articleBodyVo.setContent(articleBody.getContent());
 
+
+        return articleBodyVo;
+    }
+
+
+    /*
+    *  根据id查文章信息
+    *   根据bodyid 和categoryid 做关联查询
+    *
+    * */
+    @Override
+    public Result findArticleById(Long articleId) {
+
+
+        Article article = this.articleMapper.selectById(articleId);
+        ArticleVo articleVo = copy(article, true, true, true, true);
+        return Result.success(articleVo);
+    }
 
 
 }
