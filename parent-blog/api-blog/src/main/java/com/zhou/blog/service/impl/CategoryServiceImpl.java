@@ -21,7 +21,6 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryMapper.selectById(categoryId);
         CategoryVo categoryVo = new CategoryVo();
         BeanUtils.copyProperties(category,categoryVo);
-        System.out.println("llllll"+categoryVo.toString());
         return categoryVo;
     }
 }

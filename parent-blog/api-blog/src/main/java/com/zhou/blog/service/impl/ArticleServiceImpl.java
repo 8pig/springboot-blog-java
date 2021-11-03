@@ -9,10 +9,7 @@ import com.zhou.blog.dao.mapper.ArticleBodyMapper;
 import com.zhou.blog.dao.mapper.ArticleMapper;
 import com.zhou.blog.dao.pojo.Article;
 import com.zhou.blog.dao.pojo.ArticleBody;
-import com.zhou.blog.service.ArticleService;
-import com.zhou.blog.service.CategoryService;
-import com.zhou.blog.service.SysUserService;
-import com.zhou.blog.service.TagService;
+import com.zhou.blog.service.*;
 import com.zhou.blog.vo.ArticleBodyVo;
 import com.zhou.blog.vo.ArticleVo;
 import com.zhou.blog.vo.Result;
@@ -168,6 +165,8 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
 
+    @Autowired
+    private ThreadService threadService;
     /*
     *  根据id查文章信息
     *   根据bodyid 和categoryid 做关联查询
@@ -179,6 +178,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         Article article = this.articleMapper.selectById(articleId);
         ArticleVo articleVo = copy(article, true, true, true, true);
+        threadService.updateArticleViewCout(articleMapper, article);
         return Result.success(articleVo);
     }
 
