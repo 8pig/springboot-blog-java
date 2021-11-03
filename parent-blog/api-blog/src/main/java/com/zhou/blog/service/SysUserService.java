@@ -2,6 +2,7 @@ package com.zhou.blog.service;
 
 import com.zhou.blog.dao.pojo.SysUser;
 import com.zhou.blog.vo.Result;
+import com.zhou.blog.vo.UserVo;
 
 public interface SysUserService {
     SysUser findUserById(Long id);
@@ -14,4 +15,7 @@ public interface SysUserService {
 
     // 保存用户
     void save(SysUser sysUser);
+
+
+    UserVo findUserVoById(Long id);
 }
