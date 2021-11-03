@@ -8,7 +8,9 @@ import com.zhou.blog.service.SysUserService;
 import com.zhou.blog.vo.ErrorCode;
 import com.zhou.blog.vo.LoginUserVo;
 import com.zhou.blog.vo.Result;
+import com.zhou.blog.vo.UserVo;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -84,4 +86,18 @@ public class SysUserServiceImpl implements SysUserService {
         * */
         this.sysUserMapper.insert(sysUser);
     }
+
+    @Override
+    public UserVo findUserVoById(Long id) {
+        SysUser sysUser = sysUserMapper.selectById(id);
+        if(sysUser == null) {
+            sysUser = new SysUser();
+            sysUser.setNickname("匿名");
+            sysUser.setAvatar("https://p26-passport.byteacctimg.com/img/user-avatar/9d9a1d15302cfbad6bbd8b79870588a2~300x300.image");
+        }
+        UserVo userVo = new UserVo();
+        BeanUtils.copyProperties(sysUser, userVo);
+        return userVo;
+    }
+
 }
