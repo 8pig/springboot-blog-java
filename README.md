@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="https://github.com/8pig">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="./static/logo.png" alt="Logo" width="258" height="141">
   </a>
 
 <h3 align="center">springboot-blog</h3>
@@ -170,7 +170,6 @@ zhou773@foxmail.com
 - [Choose an Open Source License](https://choosealicense.com)
 - [GitHub Pages](https://pages.github.com)
 - [Animate.css](https://daneden.github.io/animate.css)
-
 
 
 
