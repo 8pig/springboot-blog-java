@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="https://github.com/8pig">
-    <img src="./static/logo.png" alt="Logo" width="258" height="141">
+    <img width="100px" src="http://tva1.sinaimg.cn/large/0065rEovly1gw25qko12vj30580250sz.jpg" align="center" alt="GitHub Readme Stats" />
   </a>
 
 <h3 align="center">springboot-blog</h3>
