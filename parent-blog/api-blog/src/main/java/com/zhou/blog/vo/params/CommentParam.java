@@ -1,4 +1,4 @@
-package com.zhou.blog.vo;
+package com.zhou.blog.vo.params;
 
 import lombok.Data;
 
