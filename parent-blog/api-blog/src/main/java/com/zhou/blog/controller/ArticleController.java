@@ -1,6 +1,7 @@
 package com.zhou.blog.controller;
 
 
+import com.zhou.blog.common.aop.LogAnnotation;
 import com.zhou.blog.service.ArticleService;
 import com.zhou.blog.vo.Result;
 import com.zhou.blog.vo.params.ArticleParam;
@@ -23,6 +24,8 @@ public class ArticleController {
     * @pageparams
     * */
     @PostMapping
+    /* 加上注解 表示 对接口纪录日志  */
+    @LogAnnotation(module="文章", operator="获取文章列表")
     public Result articlesList (@RequestBody PageParams pageParams) {
         return articleService.listArticle(pageParams);
     }
