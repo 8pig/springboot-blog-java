@@ -24,7 +24,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 
@@ -239,9 +241,9 @@ public class ArticleServiceImpl implements ArticleService {
 
         articleMapper.updateById(article);
 
-
-
-        return null;
+        Map<String, String> map = new HashMap<>();
+        map.put("id", article.getId().toString());
+        return Result.success(map);
     }
 
 
