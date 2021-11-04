@@ -3,6 +3,7 @@ package com.zhou.blog.controller;
 
 import com.zhou.blog.service.ArticleService;
 import com.zhou.blog.vo.Result;
+import com.zhou.blog.vo.params.ArticleParam;
 import com.zhou.blog.vo.params.PageParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -50,4 +51,13 @@ public class ArticleController {
         return articleService.findArticleById(articleId);
     }
 
+
+    /*
+    *  新增文章
+    *
+    * */
+    @PostMapping("publish")
+    public Result publish(@RequestBody ArticleParam articleParam) {
+        return articleService.publish(articleParam);
+    }
 }

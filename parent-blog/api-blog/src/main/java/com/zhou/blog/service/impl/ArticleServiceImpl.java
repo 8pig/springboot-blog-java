@@ -7,12 +7,15 @@ import com.mysql.cj.log.Log;
 import com.zhou.blog.dao.dos.Archives;
 import com.zhou.blog.dao.mapper.ArticleBodyMapper;
 import com.zhou.blog.dao.mapper.ArticleMapper;
-import com.zhou.blog.dao.pojo.Article;
-import com.zhou.blog.dao.pojo.ArticleBody;
+import com.zhou.blog.dao.mapper.ArticleTagMapper;
+import com.zhou.blog.dao.pojo.*;
 import com.zhou.blog.service.*;
+import com.zhou.blog.utils.UserThreadLocal;
 import com.zhou.blog.vo.ArticleBodyVo;
 import com.zhou.blog.vo.ArticleVo;
 import com.zhou.blog.vo.Result;
+import com.zhou.blog.vo.TagVo;
+import com.zhou.blog.vo.params.ArticleParam;
 import com.zhou.blog.vo.params.PageParams;
 import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
@@ -36,6 +39,9 @@ public class ArticleServiceImpl implements ArticleService {
     private TagService tagService;
     @Autowired
     private SysUserService sysUserService;
+
+    @Autowired
+    private ArticleTagMapper articleTagMapper;
 
 
     @Override
@@ -180,6 +186,62 @@ public class ArticleServiceImpl implements ArticleService {
         ArticleVo articleVo = copy(article, true, true, true, true);
         threadService.updateArticleViewCout(articleMapper, article);
         return Result.success(articleVo);
+    }
+
+
+    /*
+    *  save
+    *   1. 构建article 对象
+    * */
+    @Override
+    public Result publish(ArticleParam articleParam) {
+        SysUser sysUser = UserThreadLocal.get();
+        /*
+        *
+        * 1. 作者id 当前登录的ID  想获得当前登录用户 得把需要获取的路由加到congig 中
+        * 2. 标签 加入关联表中  tag
+        * 3. body 内容存储
+        *
+        *
+        * */
+        // 插入后会生成 文章id
+        Article article = new Article();
+        article.setAuthorId(sysUser.getId());
+
+        article.setWeight(Article.Article_Common);
+        article.setViewCounts(0);
+        article.setTitle(articleParam.getTitle());
+        article.setSummary(articleParam.getSummary());
+        article.setCommentCounts(0);
+        article.setCreateDate(System.currentTimeMillis());
+        article.setCategoryId(articleParam.getCategory().getId());
+
+
+        articleMapper.insert(article);
+        // tag 存储tag 表
+        List<TagVo> tags = articleParam.getTags();
+        if(tags != null) {
+            Long articleId = article.getId();
+            for (TagVo tag : tags) {
+                ArticleTag articleTag = new ArticleTag();
+                articleTag.setTagId(tag.getId());
+                articleTag.setArticleId(articleId);
+                articleTagMapper.insert(articleTag);
+            }
+        }
+        // body
+        ArticleBody articleBody = new ArticleBody();
+        articleBody.setArticleId(article.getId());
+        articleBody.setContent(articleParam.getBody().getContent());
+        articleBody.setContentHtml(articleParam.getBody().getContentHtml());
+        articleBodyMapper.insert(articleBody);
+        article.setBodyId(articleBody.getId());
+
+        articleMapper.updateById(article);
+
+
+
+        return null;
     }
 
 
