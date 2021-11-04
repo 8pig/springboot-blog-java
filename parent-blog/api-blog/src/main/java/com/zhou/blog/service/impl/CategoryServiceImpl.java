@@ -45,7 +45,6 @@ public class CategoryServiceImpl implements CategoryService {
         for (Category category : list) {
             categoryVoList.add(copy(category));
         }
-
         return categoryVoList;
     }
 

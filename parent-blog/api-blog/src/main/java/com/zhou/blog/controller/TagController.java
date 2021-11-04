@@ -21,4 +21,8 @@ public class TagController {
         return tagService.hots(limit);
     }
 
+    @GetMapping
+    public Result findAll () {
+        return tagService.findAll();
+    }
 }
