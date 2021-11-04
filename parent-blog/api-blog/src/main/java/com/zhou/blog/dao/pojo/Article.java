@@ -15,9 +15,9 @@ public class Article {
 
     private String summary;
 
-    private Integer commentCounts;
+    private int commentCounts;
 
-    private Integer viewCounts;
+    private int viewCounts;
 
     /**
      * 作者id
@@ -35,7 +35,8 @@ public class Article {
     /**
      * 置顶
      */
-    private Integer weight;
+    private int weight = Article_Common;
+
 
 
     /**
