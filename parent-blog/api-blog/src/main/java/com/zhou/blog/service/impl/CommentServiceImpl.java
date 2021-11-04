@@ -3,10 +3,12 @@ package com.zhou.blog.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.zhou.blog.dao.mapper.ArticleMapper;
 import com.zhou.blog.dao.mapper.CommentMapper;
-import com.zhou.blog.dao.pojo.Article;
 import com.zhou.blog.dao.pojo.Comment;
+import com.zhou.blog.dao.pojo.SysUser;
 import com.zhou.blog.service.CommentService;
 import com.zhou.blog.service.SysUserService;
+import com.zhou.blog.utils.UserThreadLocal;
+import com.zhou.blog.vo.params.CommentParam;
 import com.zhou.blog.vo.CommentVo;
 import com.zhou.blog.vo.Result;
 import com.zhou.blog.vo.UserVo;
@@ -55,6 +57,7 @@ public class CommentServiceImpl implements CommentService {
         return Result.success(commentVoList);
     }
 
+
     private List<CommentVo> copyList(List<Comment> comments) {
         List<CommentVo> commentVoList = new ArrayList<>();
         for (Comment comment : comments) {
@@ -101,4 +104,38 @@ public class CommentServiceImpl implements CommentService {
 
         return copyList(commentMapper.selectList(queryWrapper));
     }
+
+
+
+    /*
+     *  评论
+     *
+     * */
+    @Override
+    public Result comment(CommentParam commentParam) {
+        SysUser sysUser = UserThreadLocal.get();
+        Comment comment = new Comment();
+
+        comment.setArticleId(commentParam.getArticleId());
+        comment.setAuthorId(sysUser.getId());
+        comment.setContent(commentParam.getContent());
+        comment.setCreateDate(System.currentTimeMillis());
+        Long parent = commentParam.getParent();
+        if(parent == null || parent == 0){
+            comment.setLevel(1);
+        }else {
+            comment.setLevel(2);
+        }
+        comment.setParentId(parent == null ? 0 : parent);
+        Long toUserId = commentParam.getToUserId();
+        comment.setToUid(toUserId == null ? 0 : toUserId);
+        this.commentMapper.insert(comment);
+        return Result.success(null);
+    }
+
+
+
+
+
+
 }

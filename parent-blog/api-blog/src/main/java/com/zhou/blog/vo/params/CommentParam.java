@@ -1,11 +1,11 @@
-package com.zhou.blog.vo;
+package com.zhou.blog.vo.params;
 
 import lombok.Data;
 
 @Data
 public class CommentParam {
 
-    private Long id;
+    private Long articleId;
 
     private String content;
 
