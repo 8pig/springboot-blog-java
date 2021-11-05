@@ -4,11 +4,46 @@
 
 <mapper namespace="com.zhou.blog.dao.mapper.ArticleMapper">
 
+    <resultMap id="articleMap" type="com.zhou.blog.dao.pojo.Article">
+        <id column="id" property="id" />
+        <result column="author_id" property="authorId"/>
+        <result column="comment_counts" property="commentCounts"/>
+        <result column="create_date" property="createDate"/>
+        <result column="summary" property="summary"/>
+        <result column="title" property="title"/>
+        <result column="view_counts" property="viewCounts"/>
+        <result column="weight" property="weight"/>
+        <result column="body_id" property="bodyId"/>
+        <result column="category_id" property="categoryId"/>
+    </resultMap>
+
+
     <select id="listArchives" resultType="com.zhou.blog.dao.dos.Archives">
 --         select year(create_date) as year,month(create_date) as month,count(*) as count from ms_article GROUP BY  year, month
 --             create_date 为bigint 13位，直接year()不行，需要先转date型后year()。
             select year(FROM_UNIXTIME(create_date/1000)) year,month(FROM_UNIXTIME(create_date/1000)) month, count(*) count from ms_article group by year,month;
 
+    </select>
+<!--    Long categoryID,-->
+<!--    Long tagId,-->
+<!--    String year,-->
+<!--    String month-->
+
+    <select id="listArticle" resultMap="articleMap">
+        select * from ms_article
+        <where>
+            1 = 1
+            <if test="categoryId != null">
+                and category_id=#{categoryId}
+            </if>
+            <if test="tagId != null">
+                and id in (select article_id from ms_article_tag where tag_id=#{tagId})
+            </if>
+            <if test="year != null and year.length>0 and month != null and month.length>0">
+                and (FROM_UNIXTIME(create_date/1000,'%Y') =#{year} and FROM_UNIXTIME(create_date/1000,'%m')=#{month})
+            </if>
+        </where>
+        order by weight,create_date desc
     </select>
 
 

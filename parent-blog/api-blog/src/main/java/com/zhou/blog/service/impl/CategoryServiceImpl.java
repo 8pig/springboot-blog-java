@@ -1,6 +1,7 @@
 package com.zhou.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zhou.blog.dao.mapper.CategoryMapper;
 import com.zhou.blog.dao.pojo.Category;
 import com.zhou.blog.service.CategoryService;
@@ -30,10 +31,31 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Result findAll() {
-        List<Category> categories = categoryMapper.selectList(new LambdaQueryWrapper<>());
+        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(Category::getId,Category::getCategoryName);
+        List<Category> categories = categoryMapper.selectList(queryWrapper);
+        return Result.success(copyList(categories));
+    }
+
+    @Override
+    public Result findAllDetail() {
+        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
+        List<Category> categories = categoryMapper.selectList(queryWrapper);
 
         return Result.success(copyList(categories));
     }
+
+
+    @Override
+    public Result categoryDetailById(Long id) {
+        LambdaQueryWrapper queryWrapper = new LambdaQueryWrapper();
+
+        Category category = categoryMapper.selectById(id);
+        return Result.success(copy(category));
+    }
+
+
+
 
     private CategoryVo copy(Category categories) {
         CategoryVo categoryVo = new CategoryVo();
