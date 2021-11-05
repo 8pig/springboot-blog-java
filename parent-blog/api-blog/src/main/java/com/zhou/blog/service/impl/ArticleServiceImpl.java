@@ -162,7 +162,7 @@ public class ArticleServiceImpl implements ArticleService {
     private CategoryService categoryService;
     private ArticleVo copy(Article article, boolean isTag, boolean isAuthor,boolean isBody, boolean isCategory){
         ArticleVo articleVo = new ArticleVo();
-        articleVo.setId(Long.valueOf(String.valueOf(article.getId())));
+        articleVo.setId(String.valueOf(article.getId()));
         BeanUtils.copyProperties(article,articleVo);
 
         System.out.println(article.toString());
@@ -250,7 +250,7 @@ public class ArticleServiceImpl implements ArticleService {
         article.setSummary(articleParam.getSummary());
         article.setCommentCounts(0);
         article.setCreateDate(System.currentTimeMillis());
-        article.setCategoryId(articleParam.getCategory().getId());
+        article.setCategoryId(Long.parseLong(articleParam.getCategory().getId()));
 
 
         articleMapper.insert(article);
@@ -260,7 +260,7 @@ public class ArticleServiceImpl implements ArticleService {
             Long articleId = article.getId();
             for (TagVo tag : tags) {
                 ArticleTag articleTag = new ArticleTag();
-                articleTag.setTagId(tag.getId());
+                articleTag.setTagId(Long.parseLong(tag.getId()));
                 articleTag.setArticleId(articleId);
                 articleTagMapper.insert(articleTag);
             }
