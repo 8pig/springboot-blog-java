@@ -2,6 +2,7 @@ package com.zhou.blog.controller;
 
 
 import com.zhou.blog.common.aop.LogAnnotation;
+import com.zhou.blog.common.cache.Cache;
 import com.zhou.blog.service.ArticleService;
 import com.zhou.blog.vo.Result;
 import com.zhou.blog.vo.params.ArticleParam;
@@ -26,17 +27,20 @@ public class ArticleController {
     @PostMapping
     /* 加上注解 表示 对接口纪录日志  */
     @LogAnnotation(module="文章", operator="获取文章列表")
+    @Cache(expire= 5 * 60 * 1000, name = "list_article")
     public Result articlesList (@RequestBody PageParams pageParams) {
         return articleService.listArticle(pageParams);
     }
     // 最热文章
     @PostMapping("hot")
+    @Cache(expire= 5 * 60 * 1000, name = "hot_article")
     public Result hot () {
         int limit = 5;
         return articleService.hotArticle(limit);
     }
      // 最新文章
     @PostMapping("new")
+    @Cache(expire= 5 * 60 * 1000, name = "news_article")
     public Result newArticle () {
         int limit = 5;
         return articleService.newArticle(limit);

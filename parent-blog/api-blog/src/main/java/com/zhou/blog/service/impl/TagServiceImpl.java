@@ -34,7 +34,7 @@ public class TagServiceImpl implements TagService {
     public TagVo copy (Tag tag) {
         TagVo tagVo = new TagVo();
         BeanUtils.copyProperties(tag, tagVo);
-//        tagVo.setId(Long.valueOf(String.valueOf(tag.getId())));
+        tagVo.setId(String.valueOf(tag.getId()));
         return tagVo;
     }
     public List<TagVo> copyList(List<Tag> tagList){
