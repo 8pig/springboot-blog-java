@@ -15,4 +15,6 @@ public interface TagService {
     * 查询所有文章标签
     * */
     Result findAll();
+
+    Result findDetailById(Long id);
 }

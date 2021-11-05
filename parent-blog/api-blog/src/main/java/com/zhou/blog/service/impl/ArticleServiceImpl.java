@@ -1,6 +1,7 @@
 package com.zhou.blog.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.mysql.cj.log.Log;
@@ -42,30 +43,63 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private SysUserService sysUserService;
 
-    @Autowired
+    @Resource
     private ArticleTagMapper articleTagMapper;
 
 
     @Override
     public Result listArticle(PageParams pageParams) {
-        /*
-        * 分页查询数据库
-        * */
-        Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
-        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<Article>();
-        // 是否置顶排序
-//        queryWrapper.orderByDesc(Article::getWeight);
-        // order by create_data desc
-        queryWrapper.orderByDesc(Article::getWeight, Article::getCreateDate);
-
-        Page<Article> articlePage = articleMapper.selectPage(page, queryWrapper);
-
-        List<Article> records = articlePage.getRecords();
-
-        List<ArticleVo> articleVoList = copyList(records, true, true);
-
-        return  Result.success(articleVoList);
+        Page<Article> page = new Page<>(pageParams.getPage(),pageParams.getPageSize());
+        IPage<Article> articleIPage = articleMapper.listArticle(
+                page,
+                pageParams.getCategoryId(),
+                pageParams.getTagId(),
+                pageParams.getYear(),
+                pageParams.getMonth());
+        List<Article> records = articleIPage.getRecords();
+        return Result.success(copyList(records,true,true));
     }
+
+
+//    @Override
+//    public Result listArticle(PageParams pageParams) {
+//        /*
+//        * 分页查询数据库
+//        * */
+//        Page<Article> page = new Page<>(pageParams.getPage(), pageParams.getPageSize());
+//        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<Article>();
+//        // 是否置顶排序
+////        queryWrapper.orderByDesc(Article::getWeight);
+//        // order by create_data desc
+//        List<Long> articleIdList = new ArrayList<>();
+//        queryWrapper.orderByDesc(Article::getWeight, Article::getCreateDate);
+//        if (pageParams.getCategoryId() != null) {
+//            queryWrapper.eq(Article::getCategoryId, pageParams.getCategoryId());
+//        }
+//        if(pageParams.getTagId() != null) {
+//            LambdaQueryWrapper<ArticleTag> queryWrapper1 = new LambdaQueryWrapper();
+//            queryWrapper1.eq(ArticleTag::getTagId, pageParams.getTagId());
+//            List<ArticleTag> articleTags = articleTagMapper.selectList(queryWrapper1);
+//            for (ArticleTag articleTag : articleTags) {
+//                articleIdList.add(articleTag.getArticleId());
+//            }
+//            if(articleIdList.size() > 0){
+//                queryWrapper.in(Article::getId, articleIdList);
+//            }
+//
+//            // article 没有tag 字段   一对多的关系
+//            articleTagMapper.selectList(queryWrapper1);
+//        }
+
+
+//        Page<Article> articlePage = articleMapper.selectPage(page, queryWrapper);
+//
+//        List<Article> records = articlePage.getRecords();
+//
+//        List<ArticleVo> articleVoList = copyList(records, true, true);
+//
+//        return  Result.success(articleVoList);
+//    }
 
     // 最热文章
     @Override
