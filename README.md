@@ -64,6 +64,7 @@
 - [x] 图片上传
 - [x] AOP/redis缓存优化
 - [x] AOP/redis日志
+- [x] 后台权限管理
 
 ### 上手指南
 
@@ -97,7 +98,9 @@ git clone https://github.com/8pig/forJava.git
 
 ### 文件目录说明
 eg:
+> admin-blog 权限管理后台 springboot 
 
+> vue-admin  管理后台前端 Vue
 ```
 api-blog 
 
