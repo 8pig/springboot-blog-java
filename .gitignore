@@ -11,6 +11,8 @@
 *.iml
 *.iws
 .idea/
+# node_modules
+node_modules/
 
 # Maven
 target/
