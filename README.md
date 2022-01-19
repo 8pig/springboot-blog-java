@@ -92,9 +92,6 @@
 4. `application.properties` Modify database links
 5. run BlogApp
 
-```sh
-git clone https://github.com/8pig/forJava.git
-```
 
 ### 文件目录说明
 eg:
@@ -142,8 +139,9 @@ api-blog
 
 - [springboot](https://spring.io/projects/spring-boot)
 - [vue](https://cn.vuejs.org/)
-- [nuxt](https://www.nuxtjs.cn/)
-- [react](https://react.docschina.org/)
+- [nuxt](https://www.nuxtjs.cn/) `重构中`
+
+[//]: # (- [react]&#40;https://react.docschina.org/&#41;)
 
 
 #### 如何参与开源项目
@@ -152,9 +150,9 @@ api-blog
 
 
 1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
+2. Create your Feature Branch
+3. Commit your Changes
+4. Push to the Branch
 5. Open a Pull Request
 
 
